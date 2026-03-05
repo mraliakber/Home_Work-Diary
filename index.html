@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="ur" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="favicon.png" type="image/x-icon">
+    <title>📚 Homework Diary</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Nunito:wght@400;600;700;800&family=Noto+Nastaliq+Urdu&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0d0f1a;
+            --surface: #141728;
+            --surface2: #1c2038;
+            --surface3: #232845;
+            --accent: #f5c842;
+            --accent2: #e06c44;
+            --accent3: #5db8f5;
+            --accent4: #7ee8a2;
+            --text: #e8eaf0;
+            --text-muted: #8890aa;
+            --border: rgba(255, 255, 255, 0.07);
+            --shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+            --radius: 16px;
+            --radius-sm: 10px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Nunito', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Background Stars */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse at 20% 20%, rgba(93, 184, 245, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(245, 200, 66, 0.05) 0%, transparent 50%),
+                radial-gradient(ellipse at 60% 10%, rgba(224, 108, 68, 0.04) 0%, transparent 40%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* HEADER */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(13, 15, 26, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 70px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 4px 16px rgba(245, 200, 66, 0.3);
+        }
+
+        .logo-text h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 900;
+            color: var(--accent);
+            line-height: 1;
+        }
+
+        .logo-text p {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .header-date {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            padding: 8px 18px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--accent3);
+        }
+
+        /* MAIN LAYOUT */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 32px 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* TABS (Books) */
+        .books-nav {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 28px;
+        }
+
+        .book-tab {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            border-radius: 50px;
+            border: 1.5px solid var(--border);
+            background: var(--surface);
+            color: var(--text-muted);
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.25s;
+            position: relative;
+            white-space: nowrap;
+        }
+
+        .book-tab:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .book-tab.active {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            border-color: transparent;
+            color: #0d0f1a;
+            box-shadow: 0 4px 20px rgba(245, 200, 66, 0.35);
+            transform: translateY(-2px);
+        }
+
+        .book-tab .badge {
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 50px;
+            padding: 1px 7px;
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .book-tab.active .badge {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        /* ADD HOMEWORK SECTION */
+        .add-section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 28px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .add-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent3));
+        }
+
+        .add-section h2 {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 16px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 12px;
+            align-items: end;
+        }
+
+        @media (max-width: 640px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            background: var(--surface2);
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text);
+            font-family: 'Nunito', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 11px 14px;
+            outline: none;
+            transition: all 0.2s;
+            resize: none;
+            width: 100%;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: var(--accent);
+            background: var(--surface3);
+            box-shadow: 0 0 0 3px rgba(245, 200, 66, 0.1);
+        }
+
+        .form-group select option {
+            background: var(--surface2);
+        }
+
+        .btn-add {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            border: none;
+            border-radius: var(--radius-sm);
+            color: #0d0f1a;
+            font-family: 'Nunito', sans-serif;
+            font-size: 14px;
+            font-weight: 800;
+            padding: 11px 24px;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+            box-shadow: 0 4px 16px rgba(245, 200, 66, 0.25);
+        }
+
+        .btn-add:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(245, 200, 66, 0.35);
+        }
+
+        .btn-add:active {
+            transform: translateY(0);
+        }
+
+        /* FILTERS */
+        .filters-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-right: 4px;
+        }
+
+        .filter-btn {
+            padding: 6px 14px;
+            border-radius: 50px;
+            border: 1.5px solid var(--border);
+            background: transparent;
+            color: var(--text-muted);
+            font-family: 'Nunito', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-btn.active,
+        .filter-btn:hover {
+            border-color: var(--accent3);
+            color: var(--accent3);
+            background: rgba(93, 184, 245, 0.08);
+        }
+
+        .search-box {
+            background: var(--surface);
+            border: 1.5px solid var(--border);
+            border-radius: 50px;
+            color: var(--text);
+            font-family: 'Nunito', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 7px 16px;
+            outline: none;
+            margin-left: auto;
+            width: 200px;
+            transition: all 0.2s;
+        }
+
+        .search-box:focus {
+            border-color: var(--accent3);
+            width: 240px;
+        }
+
+        /* DATE GROUPS */
+        .date-group {
+            margin-bottom: 32px;
+        }
+
+        .date-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+
+        .date-badge {
+            background: linear-gradient(135deg, var(--surface2), var(--surface3));
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            padding: 6px 18px;
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--accent3);
+            white-space: nowrap;
+        }
+
+        .date-badge.today {
+            background: linear-gradient(135deg, rgba(93, 184, 245, 0.15), rgba(93, 184, 245, 0.05));
+            border-color: rgba(93, 184, 245, 0.3);
+        }
+
+        .date-line {
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .date-stats {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        /* HOMEWORK CARDS */
+        .hw-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 14px;
+        }
+
+        .hw-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 18px;
+            position: relative;
+            transition: all 0.25s;
+            overflow: hidden;
+            animation: cardIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        }
+
+        @keyframes cardIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.96);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .hw-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(255, 255, 255, 0.14);
+            box-shadow: var(--shadow);
+        }
+
+        .hw-card.done {
+            opacity: 0.55;
+            background: var(--surface);
+        }
+
+        .hw-card.done .hw-title {
+            text-decoration: line-through;
+            color: var(--text-muted);
+        }
+
+        .hw-card.crossed {
+            opacity: 0.38;
+            background: rgba(224, 108, 68, 0.04);
+            border-color: rgba(224, 108, 68, 0.15);
+        }
+
+        .hw-card.crossed .hw-title {
+            text-decoration: line-through;
+            color: var(--text-muted);
+        }
+
+        /* Book color strip */
+        .hw-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            border-radius: 4px 0 0 4px;
+        }
+
+        .card-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .hw-book-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border-radius: 50px;
+            padding: 3px 10px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .hw-title {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--text);
+            line-height: 1.4;
+            margin-bottom: 6px;
+            flex: 1;
+        }
+
+        .hw-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 14px;
+        }
+
+        .card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        .action-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--surface2);
+            color: var(--text-muted);
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .action-btn.done-btn:hover {
+            background: rgba(126, 232, 162, 0.15);
+            border-color: var(--accent4);
+            color: var(--accent4);
+        }
+
+        .action-btn.cross-btn:hover {
+            background: rgba(224, 108, 68, 0.15);
+            border-color: var(--accent2);
+            color: var(--accent2);
+        }
+
+        .action-btn.del-btn:hover {
+            background: rgba(255, 80, 80, 0.15);
+            border-color: #ff5050;
+            color: #ff5050;
+        }
+
+        .action-btn.active-done {
+            background: rgba(126, 232, 162, 0.15);
+            border-color: var(--accent4);
+            color: var(--accent4);
+        }
+
+        .action-btn.active-cross {
+            background: rgba(224, 108, 68, 0.15);
+            border-color: var(--accent2);
+            color: var(--accent2);
+        }
+
+        .hw-time {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        /* STATS BAR */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            margin-bottom: 28px;
+        }
+
+        @media (max-width: 600px) {
+            .stats-bar {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .stat-num {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 900;
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* EMPTY STATE */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-state .emoji {
+            font-size: 52px;
+            margin-bottom: 16px;
+        }
+
+        .empty-state h3 {
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+
+        .empty-state p {
+            font-size: 14px;
+        }
+
+        /* TOAST */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--surface3);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 14px 20px;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text);
+            box-shadow: var(--shadow);
+            z-index: 9999;
+            animation: toastIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* BOOK COLORS */
+        .book-english {
+            --book-color: #5db8f5;
+        }
+
+        .book-math {
+            --book-color: #f5c842;
+        }
+
+        .book-physics {
+            --book-color: #e06c44;
+        }
+
+        .book-urdu {
+            --book-color: #a78bfa;
+        }
+
+        .book-islamiyat {
+            --book-color: #7ee8a2;
+        }
+
+        .book-quran {
+            --book-color: #f472b6;
+        }
+
+        .book-computer {
+            --book-color: #38bdf8;
+        }
+
+        .hw-card.book-english::before {
+            background: #5db8f5;
+        }
+
+        .hw-card.book-math::before {
+            background: #f5c842;
+        }
+
+        .hw-card.book-physics::before {
+            background: #e06c44;
+        }
+
+        .hw-card.book-urdu::before {
+            background: #a78bfa;
+        }
+
+        .hw-card.book-islamiyat::before {
+            background: #7ee8a2;
+        }
+
+        .hw-card.book-quran::before {
+            background: #f472b6;
+        }
+
+        .hw-card.book-computer::before {
+            background: #38bdf8;
+        }
+
+        .hw-book-tag.book-english {
+            background: rgba(93, 184, 245, 0.12);
+            color: #5db8f5;
+        }
+
+        .hw-book-tag.book-math {
+            background: rgba(245, 200, 66, 0.12);
+            color: #f5c842;
+        }
+
+        .hw-book-tag.book-physics {
+            background: rgba(224, 108, 68, 0.12);
+            color: #e06c44;
+        }
+
+        .hw-book-tag.book-urdu {
+            background: rgba(167, 139, 250, 0.12);
+            color: #a78bfa;
+        }
+
+        .hw-book-tag.book-islamiyat {
+            background: rgba(126, 232, 162, 0.12);
+            color: #7ee8a2;
+        }
+
+        .hw-book-tag.book-quran {
+            background: rgba(244, 114, 182, 0.12);
+            color: #f472b6;
+        }
+
+        .hw-book-tag.book-computer {
+            background: rgba(56, 189, 248, 0.12);
+            color: #38bdf8;
+        }
+
+        /* PROGRESS RING */
+        .progress-wrap {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 28px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px 20px;
+        }
+
+        .progress-bar-outer {
+            flex: 1;
+            height: 8px;
+            background: var(--surface3);
+            border-radius: 50px;
+            overflow: hidden;
+        }
+
+        .progress-bar-inner {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent4), var(--accent3));
+            border-radius: 50px;
+            transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .progress-text {
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--accent4);
+            white-space: nowrap;
+            min-width: 80px;
+            text-align: right;
+        }
+
+        .progress-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        /* MODAL */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeIn 0.2s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .modal {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 28px;
+            max-width: 420px;
+            width: 100%;
+            box-shadow: var(--shadow);
+            animation: modalIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9) translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .modal h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--accent);
+        }
+
+        .modal-btns {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        .btn-cancel,
+        .btn-confirm {
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            border: 1.5px solid;
+            font-family: 'Nunito', sans-serif;
+            font-size: 14px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-cancel {
+            border-color: var(--border);
+            background: transparent;
+            color: var(--text-muted);
+        }
+
+        .btn-cancel:hover {
+            border-color: var(--text-muted);
+            color: var(--text);
+        }
+
+        .btn-confirm {
+            border-color: #ff5050;
+            background: rgba(255, 80, 80, 0.1);
+            color: #ff5050;
+        }
+
+        .btn-confirm:hover {
+            background: rgba(255, 80, 80, 0.2);
+        }
+
+        /* SECTION TITLE */
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--text);
+            margin-bottom: 6px;
+        }
+
+        .section-sub {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        .no-results {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 40px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--surface3);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">
+            <div class="logo-icon">📚</div>
+            <div class="logo-text">
+                <h1>Homework Diary</h1>
+                <p>Your Personal Study Tracker</p>
+            </div>
+        </div>
+        <div class="header-date" id="headerDate">📅 Loading...</div>
+    </header>
+
+    <div class="container">
+
+        <!-- ADD HOMEWORK -->
+        <div class="add-section">
+            <h2>➕ Add Homework</h2>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Book / Subject</label>
+                    <select id="bookSelect">
+                        <option value="english">📖 English</option>
+                        <option value="math">📐 Math</option>
+                        <option value="physics">⚛️ Physics</option>
+                        <option value="urdu">✍️ Urdu</option>
+                        <option value="islamiyat">☪️ Islamiyat</option>
+                        <option value="quran">📿 Tarjma Tul Quran</option>
+                        <option value="computer">💻 Computer</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Homework Title</label>
+                    <input type="text" id="hwTitle" placeholder="e.g. Exercise 5, Page 42 read karo..." />
+                </div>
+                <button class="btn-add" onclick="addHomework()">+ Add</button>
+            </div>
+            <div style="margin-top: 12px;">
+                <div class="form-group">
+                    <label>Details / Notes (Optional)</label>
+                    <textarea id="hwDesc" rows="2" placeholder="Extra details likhein..."></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- STATS -->
+        <div class="stats-bar" id="statsBar"></div>
+
+        <!-- PROGRESS -->
+        <div class="progress-wrap">
+            <span class="progress-label">🎯 Aaj ka Progress:</span>
+            <div class="progress-bar-outer">
+                <div class="progress-bar-inner" id="progressBar" style="width: 0%"></div>
+            </div>
+            <span class="progress-text" id="progressText">0%</span>
+        </div>
+
+        <!-- BOOK TABS -->
+        <div class="books-nav" id="booksNav"></div>
+
+        <!-- FILTERS -->
+        <div class="filters-row">
+            <span class="filter-label">Filter:</span>
+            <button class="filter-btn active" onclick="setFilter('all', this)">📋 All</button>
+            <button class="filter-btn" onclick="setFilter('pending', this)">⏳ Pending</button>
+            <button class="filter-btn" onclick="setFilter('done', this)">✅ Done</button>
+            <button class="filter-btn" onclick="setFilter('crossed', this)">❌ Not Done</button>
+            <input type="text" class="search-box" id="searchBox" placeholder="🔍 Search..." oninput="renderAll()" />
+        </div>
+
+        <!-- SECTION TITLE -->
+        <div class="section-title">📓 Homework History</div>
+        <div class="section-sub">Sare homework — aaj se le kar pehle din tak</div>
+
+        <!-- HOMEWORK LIST -->
+        <div id="hwList"></div>
+
+    </div>
+
+    <!-- DELETE MODAL -->
+    <div class="modal-overlay" id="deleteModal" style="display:none;">
+        <div class="modal">
+            <h3>🗑️ Delete Karo?</h3>
+            <p style="color: var(--text-muted); font-size: 14px; line-height: 1.6;">Yeh homework delete hoga aur wapas
+                nahi aayega. Confirm karo?</p>
+            <div class="modal-btns">
+                <button class="btn-cancel" onclick="closeDeleteModal()">Cancel</button>
+                <button class="btn-confirm" onclick="confirmDelete()">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== DATA =====
+        const BOOKS = [
+            { id: 'all', label: 'All Books', emoji: '📚' },
+            { id: 'english', label: 'English', emoji: '📖' },
+            { id: 'math', label: 'Math', emoji: '📐' },
+            { id: 'physics', label: 'Physics', emoji: '⚛️' },
+            { id: 'urdu', label: 'Urdu', emoji: '✍️' },
+            { id: 'islamiyat', label: 'Islamiyat', emoji: '☪️' },
+            { id: 'quran', label: 'Tarjma Quran', emoji: '📿' },
+            { id: 'computer', label: 'Computer', emoji: '💻' },
+        ];
+
+        const BOOK_MAP = {};
+        BOOKS.forEach(b => BOOK_MAP[b.id] = b);
+
+        let homeworks = JSON.parse(localStorage.getItem('hw_diary') || '[]');
+        let activeBook = 'all';
+        let activeFilter = 'all';
+        let deleteId = null;
+
+        // ===== HELPERS =====
+        function saveData() {
+            localStorage.setItem('hw_diary', JSON.stringify(homeworks));
+        }
+
+        function todayStr() {
+            return new Date().toISOString().split('T')[0];
+        }
+
+        function formatDate(dateStr) {
+            const d = new Date(dateStr + 'T00:00:00');
+            const today = todayStr();
+            const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
+            const yStr = yesterday.toISOString().split('T')[0];
+
+            if (dateStr === today) return '📅 Aaj — ' + d.toLocaleDateString('en-PK', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+            if (dateStr === yStr) return '🌙 Kal — ' + d.toLocaleDateString('en-PK', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+            return '📆 ' + d.toLocaleDateString('en-PK', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+        }
+
+        function timeStr(ts) {
+            return new Date(ts).toLocaleTimeString('en-PK', { hour: '2-digit', minute: '2-digit' });
+        }
+
+        function genId() {
+            return Date.now() + '_' + Math.random().toString(36).slice(2);
+        }
+
+        // ===== HEADER DATE =====
+        function updateHeaderDate() {
+            const el = document.getElementById('headerDate');
+            const now = new Date();
+            el.textContent = '📅 ' + now.toLocaleDateString('en-PK', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+        }
+        updateHeaderDate();
+
+        // ===== STATS =====
+        function renderStats() {
+            const today = todayStr();
+            const todayHWs = homeworks.filter(h => h.date === today);
+            const totalToday = todayHWs.length;
+            const doneToday = todayHWs.filter(h => h.status === 'done').length;
+            const crossedToday = todayHWs.filter(h => h.status === 'crossed').length;
+            const pending = todayHWs.filter(h => h.status === 'pending').length;
+
+            const stats = [
+                { num: homeworks.length, label: 'Total Homework', color: '#5db8f5' },
+                { num: totalToday, label: 'Aaj ka Kaam', color: '#f5c842' },
+                { num: doneToday, label: 'Complete ✅', color: '#7ee8a2' },
+                { num: pending, label: 'Baqi ⏳', color: '#e06c44' },
+            ];
+
+            document.getElementById('statsBar').innerHTML = stats.map(s => `
+    <div class="stat-card">
+      <div class="stat-num" style="color:${s.color}">${s.num}</div>
+      <div class="stat-label">${s.label}</div>
+    </div>
+  `).join('');
+
+            // Progress
+            const todayActive = todayHWs.filter(h => h.status !== 'crossed');
+            const doneActive = todayActive.filter(h => h.status === 'done').length;
+            const pct = todayActive.length ? Math.round((doneActive / todayActive.length) * 100) : 0;
+            document.getElementById('progressBar').style.width = pct + '%';
+            document.getElementById('progressText').textContent = pct + '% Done';
+        }
+
+        // ===== BOOK TABS =====
+        function renderBookTabs() {
+            const counts = {};
+            BOOKS.forEach(b => { if (b.id !== 'all') counts[b.id] = 0; });
+            homeworks.forEach(h => { if (counts[h.book] !== undefined) counts[h.book]++; });
+            counts['all'] = homeworks.length;
+
+            document.getElementById('booksNav').innerHTML = BOOKS.map(b => `
+    <button class="book-tab ${activeBook === b.id ? 'active' : ''}"
+      onclick="setBook('${b.id}')">
+      ${b.emoji} ${b.label}
+      <span class="badge">${counts[b.id] || 0}</span>
+    </button>
+  `).join('');
+        }
+
+        function setBook(id) {
+            activeBook = id;
+            renderAll();
+        }
+
+        // ===== FILTER =====
+        function setFilter(f, btn) {
+            activeFilter = f;
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderAll();
+        }
+
+        // ===== ADD HOMEWORK =====
+        function addHomework() {
+            const book = document.getElementById('bookSelect').value;
+            const title = document.getElementById('hwTitle').value.trim();
+            const desc = document.getElementById('hwDesc').value.trim();
+
+            if (!title) {
+                showToast('⚠️ Title likhein pehle!');
+                document.getElementById('hwTitle').focus();
+                return;
+            }
+
+            const hw = {
+                id: genId(),
+                book,
+                title,
+                desc,
+                status: 'pending',
+                date: todayStr(),
+                ts: Date.now(),
+            };
+
+            homeworks.unshift(hw);
+            saveData();
+            document.getElementById('hwTitle').value = '';
+            document.getElementById('hwDesc').value = '';
+            renderAll();
+            showToast('✅ Homework add ho gayi!');
+        }
+
+        // ===== STATUS TOGGLE =====
+        function toggleDone(id) {
+            const hw = homeworks.find(h => h.id === id);
+            if (!hw) return;
+            hw.status = hw.status === 'done' ? 'pending' : 'done';
+            saveData(); renderAll();
+            showToast(hw.status === 'done' ? '🎉 Done mark kiya!' : '↩️ Wapas pending');
+        }
+
+        function toggleCross(id) {
+            const hw = homeworks.find(h => h.id === id);
+            if (!hw) return;
+            hw.status = hw.status === 'crossed' ? 'pending' : 'crossed';
+            saveData(); renderAll();
+            showToast(hw.status === 'crossed' ? '❌ Cross lag gayi!' : '↩️ Wapas pending');
+        }
+
+        let deleteId_pending = null;
+        function askDelete(id) {
+            deleteId_pending = id;
+            document.getElementById('deleteModal').style.display = 'flex';
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').style.display = 'none';
+            deleteId_pending = null;
+        }
+
+        function confirmDelete() {
+            if (!deleteId_pending) return;
+            homeworks = homeworks.filter(h => h.id !== deleteId_pending);
+            saveData(); renderAll();
+            closeDeleteModal();
+            showToast('🗑️ Delete ho gayi!');
+        }
+
+        // ===== RENDER =====
+        function renderAll() {
+            renderStats();
+            renderBookTabs();
+            renderList();
+        }
+
+        function renderList() {
+            const search = document.getElementById('searchBox').value.trim().toLowerCase();
+
+            let filtered = homeworks.filter(h => {
+                if (activeBook !== 'all' && h.book !== activeBook) return false;
+                if (activeFilter === 'pending' && h.status !== 'pending') return false;
+                if (activeFilter === 'done' && h.status !== 'done') return false;
+                if (activeFilter === 'crossed' && h.status !== 'crossed') return false;
+                if (search) {
+                    const book = BOOK_MAP[h.book];
+                    if (
+                        !h.title.toLowerCase().includes(search) &&
+                        !h.desc.toLowerCase().includes(search) &&
+                        !(book && book.label.toLowerCase().includes(search))
+                    ) return false;
+                }
+                return true;
+            });
+
+            const container = document.getElementById('hwList');
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+      <div class="empty-state">
+        <div class="emoji">📭</div>
+        <h3>Koi Homework Nahi!</h3>
+        <p>${search ? 'Search se kuch nahi mila.' : 'Pehle kuch homework add karo upar se.'}</p>
+      </div>`;
+                return;
+            }
+
+            // Group by date
+            const groups = {};
+            filtered.forEach(hw => {
+                if (!groups[hw.date]) groups[hw.date] = [];
+                groups[hw.date].push(hw);
+            });
+
+            const sortedDates = Object.keys(groups).sort((a, b) => b.localeCompare(a));
+            const today = todayStr();
+
+            container.innerHTML = sortedDates.map(date => {
+                const items = groups[date];
+                const done = items.filter(h => h.status === 'done').length;
+                const crossed = items.filter(h => h.status === 'crossed').length;
+
+                return `
+      <div class="date-group">
+        <div class="date-header">
+          <div class="date-badge ${date === today ? 'today' : ''}">${formatDate(date)}</div>
+          <div class="date-line"></div>
+          <div class="date-stats">✅ ${done} done · ❌ ${crossed} nahi kiya · 📋 ${items.length} total</div>
+        </div>
+        <div class="hw-grid">
+          ${items.map(hw => renderCard(hw)).join('')}
+        </div>
+      </div>
+    `;
+            }).join('');
+        }
+
+        function renderCard(hw) {
+            const book = BOOK_MAP[hw.book] || { label: hw.book, emoji: '📋' };
+            const isDone = hw.status === 'done';
+            const isCrossed = hw.status === 'crossed';
+
+            return `
+    <div class="hw-card book-${hw.book} ${isDone ? 'done' : ''} ${isCrossed ? 'crossed' : ''}">
+      <div class="card-top">
+        <div>
+          <span class="hw-book-tag book-${hw.book}">${book.emoji} ${book.label}</span>
+        </div>
+      </div>
+      <div class="hw-title">${escHtml(hw.title)}</div>
+      ${hw.desc ? `<div class="hw-desc">${escHtml(hw.desc)}</div>` : ''}
+      <div class="card-footer">
+        <div class="card-actions">
+          <button class="action-btn done-btn ${isDone ? 'active-done' : ''}" 
+            title="${isDone ? 'Pending karo' : 'Done karo'}"
+            onclick="toggleDone('${hw.id}')">✅</button>
+          <button class="action-btn cross-btn ${isCrossed ? 'active-cross' : ''}" 
+            title="${isCrossed ? 'Pending karo' : 'Nahi kiya mark karo'}"
+            onclick="toggleCross('${hw.id}')">❌</button>
+          <button class="action-btn del-btn" title="Delete" onclick="askDelete('${hw.id}')">🗑️</button>
+        </div>
+        <div class="hw-time">🕐 ${timeStr(hw.ts)}</div>
+      </div>
+    </div>
+  `;
+        }
+
+        function escHtml(s) {
+            return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        // ===== TOAST =====
+        function showToast(msg) {
+            const old = document.querySelector('.toast');
+            if (old) old.remove();
+            const t = document.createElement('div');
+            t.className = 'toast';
+            t.textContent = msg;
+            document.body.appendChild(t);
+            setTimeout(() => { t.style.opacity = '0'; t.style.transition = 'opacity 0.4s'; setTimeout(() => t.remove(), 400); }, 2500);
+        }
+
+        // ===== KEYBOARD SHORTCUT =====
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Enter' && document.activeElement.id === 'hwTitle') {
+                addHomework();
+            }
+        });
+
+        // ===== INIT =====
+        renderAll();
+        setInterval(updateHeaderDate, 60000);
+    </script>
+</body>
+
+</html>
